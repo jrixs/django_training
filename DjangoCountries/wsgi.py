@@ -1,5 +1,5 @@
 """
-WSGI config for FirstDjango project.
+WSGI config for DjangoCountries project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FirstDjango.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'DjangoCountries.settings')
 
 application = get_wsgi_application()

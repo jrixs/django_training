@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Title</title>
+ </head>
+ <body>
+</ol>
+  <h1>Список стран</h1>
+  <ul>
+      {% for char in chars %}
+      <li style="display: inline-block;"><a href="/country-filter/{{ char }}">{{ char }}</a></li>
+      {% endfor %}
+  </ul>
+  <ol>
+      {% for country in countries %}
+      <li><a href="/country/{{ country }}">{{ country }}</a></li>
+      {% endfor %}
+  </ol>
+
+    <div>
+        <span>
+            {% if countries.has_previous %}
+                <p><a href="?page=1"> << </a> | <a href="?page={{ countries.previous_page_number }}"> < </a>
+            {% endif %}
+            <span>
+                Page {{ countries.number }} of {{ countries.paginator.num_pages }}.
+            </span>
+            {% if countries.has_next %}
+                <a href="?page={{ countries.next_page_number }}"> > </a> | <a href="?page={{ countries.paginator.num_pages }}"> >> </a></p>
+            {% endif %}
+        </span>
+    </div>
+ </body>
+</html>

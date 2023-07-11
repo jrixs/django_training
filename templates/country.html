@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>{{ country.country }}</title>
+ </head>
+ <body>
+  <h1>{{ country.country }}</h1>
+  <p>Список языков, на которых говорят в данной стране:</p>
+  <ol>
+    {% for lenguage in country.languages %}
+      <li>{{ lenguage }}</li>
+    {% endfor%}
+  </ol>
+  <a href="/countries-list">назад</a>
+ </body>
+</html>
