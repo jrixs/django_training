@@ -5,10 +5,10 @@ from MainApp.models import Item
 
 # Create your views here.
 
-about_inf = {'Имя': 'Юрий',
-             'Отчество': 'Александрович',
-             'Фамилия': 'Сыновец',
-             'телефон': '8-919-000-00-00',
+about_inf = {'name': 'Юрий',
+             'patronymic': 'Александрович',
+             'surname': 'Сыновец',
+             'tel': '8-919-000-00-00',
              'email': 'exampel@mail.ru'}
 
 
@@ -21,13 +21,7 @@ def home(request):
 
 
 def about(request):
-    text = f'''<p>Имя: <b>{about_inf.get('Имя')}</b></p>
-    <p>Отчество: <b>{about_inf.get('Отчество')}</b></p>
-    <p>Фамилия: <b>{about_inf.get('Фамилия')}</b></p>
-    <p>телефон: <b>{about_inf.get('телефон')}</b></p>
-    <p>email: <b>{about_inf.get('email')}</b></p>
-    '''
-    return HttpResponse(text)
+    return render(request=request, template_name='about.html', context=about_inf)
 
 
 def item(request, id=1):

@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
- <head>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-  <title>Title</title>
- </head>
- <body>
-  <h1>Список таваров</h1>
+{% extends "base.html" %}
+
+{% block title %}Items{% endblock %}
+
+{% block content %}
+    <h1>Список товаров</h1>
     <div class="blocks">
-      {% for item in items %}
-      <div class="block">
-        <a href="/item/{{ item.id }}">{{ item.name }}</a>
-        <p>Описание: {{ item.description }}</p>
-      </div>
-      {% endfor %}
+        {% for item in items %}
+        <div class="block">
+           <a href="{% url 'item' id=item.id %}">{{ item.name }}</a>
+           <p>Описание: {{ item.description }}</p>
+        </div>
+        {% endfor %}
     </div>
- </body>
-</html>
+{% endblock %}

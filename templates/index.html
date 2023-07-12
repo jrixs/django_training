@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html>
- <head>
-  <meta charset="utf-8" />
-  <title>HTML5</title>
- </head>
- <body>
- <div>
-  / <a HREF="/">Home</a> / <a href="/items">items</a> / <a href="/about">about</a>
- </div>
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
   <h1>Welcome</h1>
-  <p>Сеня завут: <i>{{ name }}</i></p>
+  <p>Mеня зовут: <i>{{ name }}</i></p>
   <p>Мой email для связи: <i>{{ email }}</i></p>
- </body>
-</html>
+{% endblock %}
+
