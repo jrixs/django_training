@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
 
@@ -37,6 +37,11 @@ def snippets_detail(request, id=0):
     except Exception as err:
         print(f'to log? get item id={id} err: {err}')
         return HttpResponse(f'Snippet с id={id} не существует')
+
+def snippet_delete(request, id):
+    spippet = Snippet.objects.get(id=id)
+    spippet.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #def snippets_create(request):
 #    if request.method == 'POST':
