@@ -14,7 +14,12 @@
 
     <div class="row">
         <div class="col">
-            <form action="" method="post">
+            <p>{{ tid }}</p>
+            {% if butoon == 'Создать' %}
+                <form action="{% url 'snippets-add' %}" method="post">
+            {% else %}
+                <form action="{% url 'snippet-change' id=tid %}" method="post">
+            {% endif %}
                 {% csrf_token %}
                 <table>
                     {{ form }}

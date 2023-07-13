@@ -1,9 +1,10 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from MainApp.models import Snippet
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserRegistrationForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
@@ -32,7 +33,7 @@ def add_snippet_page(request):
 
 def snippets_page(request):
     context = {'pagename': 'Просмотр сниппетов',
-               'snippets': Snippet.objects.all()}
+               'snippets': Snippet.objects.filter(public=True)}
     return render(request, 'pages/view_snippets.html', context)
 
 
@@ -53,15 +54,24 @@ def snippets_change(request, id):
         form = SnippetForm(instance=snipper)
         context = {'pagename': 'Изменение сниппета',
                    'form': form,
-                   'butoon': 'Изменить'}
+                   'butoon': 'Изменить',
+                   'tid': id}
         return render(request, 'pages/form_snippet.html', context)
 
     if request.method == 'POST':
-        form = SnippetForm(request.POST)
-        if form.is_valid():
+        try:
+            form = Snippet.objects.get(id=id)
+            form.name = request.POST.get('name')
+            form.lang = request.POST.get('lang')
+            form.code = request.POST.get('code')
+            if request.POST.get('public') == 'on':
+                form.public = True
+            else:
+                form.public = False
             form.save()
             return redirect('snippets-my-list')
-        return render(request,'pages/form_snippet.html', {'form': form})
+        except ObjectDoesNotExist:
+            raise Http404
 
 
 @login_required
@@ -70,6 +80,20 @@ def snippet_delete(request, id):
     spippet.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
+def create_user(request):
+    context = {'pagename': 'Регистрация'}
+    if request.method == 'GET':
+        form = UserRegistrationForm()
+        context['form'] = form
+        return render(request, 'pages/registration.html', context)
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        context['form'] = form
+        return render(request, 'pages/registration.html', context)
 
 def login(request):
     if request.method == 'POST':
