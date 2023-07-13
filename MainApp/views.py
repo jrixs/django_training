@@ -32,8 +32,11 @@ def add_snippet_page(request):
 
 
 def snippets_page(request):
+    data = Snippet.objects.filter(public=True)
+    if request.user.is_authenticated:
+        data = data | Snippet.objects.filter(user=request.user, public=False)
     context = {'pagename': 'Просмотр сниппетов',
-               'snippets': Snippet.objects.filter(public=True)}
+               'snippets': data}
     return render(request, 'pages/view_snippets.html', context)
 
 
