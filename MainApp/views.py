@@ -5,6 +5,7 @@ from MainApp.forms import SnippetForm, UserRegistrationForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
@@ -27,7 +28,9 @@ def add_snippet_page(request):
             if request.user.is_authenticated:
                 snippet.user = request.user
                 snippet.save()
+                messages.success(request, 'Snippet created')
             return redirect('snippets-my-list')
+        messages.warning(request, 'Snippet not created')
         return render(request,'pages/form_snippet.html',{'form': form})
 
 
@@ -42,8 +45,9 @@ def snippets_page(request):
 
 def snippets_detail(request, id=0):
     try:
+        snippet = Snippet.objects.get(id=id)
         context = {'pagename': 'Просмотр кода сниппета',
-                   'snippet': Snippet.objects.get(id=id)}
+                   'snippet': snippet}
         return render(request, 'pages/view_snippets_detail.html', context)
     except Exception as err:
         print(f'to log? get item id={id} err: {err}')
@@ -72,8 +76,10 @@ def snippets_change(request, id):
             else:
                 form.public = False
             form.save()
+            messages.success(request, 'Snippet changed')
             return redirect('snippets-my-list')
         except ObjectDoesNotExist:
+            messages.error(request, 'Snippet not changed')
             raise Http404
 
 
@@ -81,6 +87,7 @@ def snippets_change(request, id):
 def snippet_delete(request, id):
     spippet = Snippet.objects.get(id=id)
     spippet.delete()
+    messages.success(request, 'Snippet deleted')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -94,8 +101,10 @@ def create_user(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'User created')
             return redirect('home')
         context['form'] = form
+        messages.warning(request, 'User not created')
         return render(request, 'pages/registration.html', context)
 
 def login(request):
@@ -105,15 +114,18 @@ def login(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
+            messages.info(request, 'User login')
         else:
             context = {'pagename': 'PythonBin',
                        'errors': ['wrong user or password']}
+            messages.warning(request, 'wrong user or password')
             return render(request, 'pages/index.html', context)
     return redirect('home')
 
 
 def loguot(request):
     auth.logout(request)
+    messages.info(request, 'User loguot')
     return redirect('home')
 
 
@@ -123,6 +135,3 @@ def snippets_my_list(request):
     context = {'pagename': 'Мои сниппеты',
                'snippets': snippets}
     return render(request, 'pages/view_snippets.html', context)
-
-
-

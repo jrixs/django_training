@@ -26,6 +26,20 @@
                 padding-right: 15px;
                 padding-left: 15px;
             }
+            .messages {
+            display: block;
+            top: 80px;
+            position: absolute;
+            text-align: right;
+            width: 90%;
+            }
+
+            .success {color: green;}
+            .info {color: bleck;}
+            .warning {color: orang;}
+            .error {color: red;}
+            .debug {color: blue;}
+
         </style>
     {% endblock %}
 </head>
@@ -34,8 +48,16 @@
 
 {% include 'inc/inc-header.html' %}
 
+
 <!-- Begin page content -->
 <main role="main" class="mt-3 flex-shrink-0">
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message|safe }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 </main>
