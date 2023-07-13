@@ -72,14 +72,13 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get("username")
         password = request.POST.get("password")
-        # print("username =", username)
-        # print("password =", password)
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
         else:
-            # Return error message
-            pass
+            context = {'pagename': 'PythonBin',
+                       'errors': ['wrong user or password']}
+            return render(request, 'pages/index.html', context)
     return redirect('home')
 
 

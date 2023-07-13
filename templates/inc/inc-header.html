@@ -29,6 +29,11 @@
                 <a href="{% url 'loguot' %}">loguot</a>
             {% else %}
                 {% include 'inc/form_auth.html' %}
+                {% if errors %}
+                    {% for error in errors %}
+                        <span style="color: red">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
             {% endif %}
         </div>
     </nav>
