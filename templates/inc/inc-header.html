@@ -24,6 +24,12 @@
                     </li>
                 </ul>
             </div>
+            {% if request.user.is_authenticated %}
+                <span style="color: white">Welcome, {{request.user.username }}</span>
+                <a href="{% url 'loguot' %}">loguot</a>
+            {% else %}
+                {% include 'inc/form_auth.html' %}
+            {% endif %}
         </div>
     </nav>
 </header>
