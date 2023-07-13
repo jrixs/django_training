@@ -3,13 +3,14 @@ from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirec
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
 from django.contrib import auth
-
+from django.contrib.auth.decorators import login_required
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
     return render(request, 'pages/index.html', context)
 
 
+@login_required
 def add_snippet_page(request):
     if request.method == 'GET':
         form = SnippetForm()
@@ -25,7 +26,7 @@ def add_snippet_page(request):
             if request.user.is_authenticated:
                 snippet.user = request.user
                 snippet.save()
-            return redirect('snippets-list')
+            return redirect('snippets-my-list')
         return render(request,'pages/form_snippet.html',{'form': form})
 
 
@@ -45,6 +46,7 @@ def snippets_detail(request, id=0):
         return HttpResponse(f'Snippet с id={id} не существует')
 
 
+@login_required
 def snippets_change(request, id):
     if request.method == 'GET':
         snipper = Snippet.objects.get(id=id)
@@ -58,10 +60,11 @@ def snippets_change(request, id):
         form = SnippetForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('snippets-list')
+            return redirect('snippets-my-list')
         return render(request,'pages/form_snippet.html', {'form': form})
 
 
+@login_required
 def snippet_delete(request, id):
     spippet = Snippet.objects.get(id=id)
     spippet.delete()
@@ -84,5 +87,15 @@ def login(request):
 
 def loguot(request):
     auth.logout(request)
-    return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect('home')
+
+
+@login_required
+def snippets_my_list(request):
+    snippets = Snippet.objects.filter(user=request.user)
+    context = {'pagename': 'Мои сниппеты',
+               'snippets': snippets}
+    return render(request, 'pages/view_snippets.html', context)
+
+
 
