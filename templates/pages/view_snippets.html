@@ -36,6 +36,9 @@
                     <td scope="row">{{ snippet.id }}</td>
                     <td>
                         <a href="{% url 'snippet-detail' id=snippet.id %}">{{ snippet.name }}</a>
+                        <a href="{% url 'snippet-change' id=snippet.id %}">
+                            <i class="fa-sharp fa-solid fa-pen" style="color: #e5a50a;"></i>
+                        </a>
                         <a href="{% url 'snippet-delete' id=snippet.id %}">
                             <i style="color: red" class="fa-sharp fa-solid fa-trash"></i>
                         </a>

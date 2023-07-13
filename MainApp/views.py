@@ -12,15 +12,16 @@ def add_snippet_page(request):
     if request.method == 'GET':
         form = SnippetForm()
         context = {'pagename': 'Добавление нового сниппета',
-                   'form': form}
-        return render(request, 'pages/add_snippet.html', context)
+                   'form': form,
+                   'butoon': 'Создать'}
+        return render(request, 'pages/form_snippet.html', context)
 
     if request.method == 'POST':
         form = SnippetForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('snippets-list')
-        return render(request,'pages/add_snippet.html',{'form': form})
+        return render(request,'pages/form_snippet.html',{'form': form})
 
 
 def snippets_page(request):
@@ -38,16 +39,25 @@ def snippets_detail(request, id=0):
         print(f'to log? get item id={id} err: {err}')
         return HttpResponse(f'Snippet с id={id} не существует')
 
+
+def snippets_change(request, id):
+    if request.method == 'GET':
+        snipper = Snippet.objects.get(id=id)
+        form = SnippetForm(instance=snipper)
+        context = {'pagename': 'Изменение сниппета',
+                   'form': form,
+                   'butoon': 'Изменить'}
+        return render(request, 'pages/form_snippet.html', context)
+
+    if request.method == 'POST':
+        form = SnippetForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('snippets-list')
+        return render(request,'pages/form_snippet.html', {'form': form})
+
+
 def snippet_delete(request, id):
     spippet = Snippet.objects.get(id=id)
     spippet.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-#def snippets_create(request):
-#    if request.method == 'POST':
-#        name = request.POST['name']
-#        lang = request.POST['lang']
-#        code = request.POST['code']
-#        data = Snippet(name=name, lang=lang, code=code)
-#        data.save()
-#        return redirect('snippets-list')
