@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- Begin page content -->
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>{{ pagename }}</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            {% if butoon == 'Создать' %}
+                <form action="{% url 'snippets-add' %}" method="post">
+            {% else %}
+                <form action="{% url 'snippet-change' id=tid %}" method="post">
+            {% endif %}
+                {% csrf_token %}
+                <table>
+                    {{ form }}
+                </table>
+                <button type="submit">{{ butoon }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
