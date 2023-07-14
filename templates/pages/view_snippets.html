@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Begin page content -->
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <h1>{{ pagename }}</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <p>На данной страницы будут отображаться все созданные сниппеты.</p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Доступ</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for snippet in snippets %}
+                <tr>
+                    <td scope="row">{{ snippet.id }}</td>
+                    <td>
+                        <a href="{% url 'snippet-detail' id=snippet.id %}">{{ snippet.name }}</a>
+                        {% if request.user == snippet.user %}
+                        <a href="{% url 'snippet-change' id=snippet.id %}">
+                            <i class="fa-sharp fa-solid fa-pen" style="color: #e5a50a;"></i>
+                        </a>
+                        <a href="{% url 'snippet-delete' id=snippet.id %}">
+                            <i style="color: red" class="fa-sharp fa-solid fa-trash"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                    <td>{{ snippet.creation_date }}</td>
+                    <td>{{ snippet.user }}</td>
+                    {% if snippet.public %}
+                        <td>Публичный</td>
+                    {% else %}
+                        <td>Привытный</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            <div align="right">
+                <i style="color: gray;">Всего сниппетов: {{ snippets.count }}</i>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

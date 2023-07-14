@@ -1,18 +1,20 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
-class Colors(models.Model):
-   name  = models.CharField(max_length=32)
+LTNGS = (
+    ('py', 'Python'),
+    ('js', 'JavaScript'),
+    ('cpp', 'C++')
+)
 
-   def __repr__(self):
-      return f'Colors({self.name})'
 
-class Item(models.Model):
-   name  = models.CharField(max_length=100)
-   brand = models.CharField(max_length=100)
-   count = models.PositiveIntegerField()
-   description = models.CharField(max_length=1000)
-   colors = models.ManyToManyField(to=Colors)
+class Snippet(models.Model):
+    name = models.CharField(max_length=100)
+    lang = models.CharField(max_length=30, choices=LTNGS)
+    code = models.TextField(max_length=5000)
+    creation_date = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+    public = models.BooleanField(default=True)
 
-   def __repr__(self):
-      return f'Item({self.name, self.brand, self.count, self.description})'
+    def __str__(self):
+        return f'{self.__class__.__name__}{self.name, self.lang}'
