@@ -21,14 +21,47 @@
 
     <div class="row">
         <div class="col">
+            <form action="{% url 'snippet-user-sort' %}" method="post">
+                {% csrf_token %}
+                <label for="team_name">Enter name user: </label>
+                <select id="team_name" name="sort_user">
+                    {% for user in users %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+              <input type="submit" value="OK" />
+            </form>
+
+
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
             <table class="table table-striped">
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Название</th>
-                    <th scope="col">Дата создания</th>
-                    <th scope="col">Пользователь</th>
-                    <th scope="col">Доступ</th>
+                    <th scope="col">ID
+                        <a href="/listsort?sort=id&abc=1">△</a>
+                        <a href="/listsort?sort=id&abc=0">▽</a>
+                    </th>
+                    <th scope="col">Название
+                        <a href="/listsort?sort=name&abc=1">△</a>
+                        <a href="/listsort?sort=name&abc=0">▽</a>
+                    </th>
+                    <th scope="col">Дата создания
+                        <a href="/listsort?sort=creation_date&abc=1">△</a>
+                        <a href="/listsort?sort=creation_date&abc=0">▽</a>
+                    </th>
+                    <th scope="col">Пользователь
+                        <a href="/listsort?sort=user&abc=1">△</a>
+                        <a href="/listsort?sort=user&abc=0">▽</a>
+                    </th>
+                    <th scope="col">Доступ
+                        <a href="/listsort?sort=public&abc=1">△</a>
+                        <a href="/listsort?sort=public&abc=0">▽</a>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>

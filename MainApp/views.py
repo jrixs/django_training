@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
@@ -36,10 +37,12 @@ def add_snippet_page(request):
 
 def snippets_page(request):
     data = Snippet.objects.filter(public=True)
+    users = User.objects.all()
     if request.user.is_authenticated:
         data = data | Snippet.objects.filter(user=request.user, public=False)
     context = {'pagename': 'Просмотр сниппетов',
-               'snippets': data}
+               'snippets': data,
+               'users': users}
     return render(request, 'pages/view_snippets.html', context)
 
 
@@ -133,5 +136,37 @@ def loguot(request):
 def snippets_my_list(request):
     snippets = Snippet.objects.filter(user=request.user)
     context = {'pagename': 'Мои сниппеты',
-               'snippets': snippets}
+               'snippets': snippets,
+               'user': request.user}
     return render(request, 'pages/view_snippets.html', context)
+
+def listsort(request):
+    colum = request.GET.get('sort')
+    abc = int(request.GET.get('abc'))
+    user = request.GET.get('user')
+    if user:
+        snippets = Snippet.objects.filter(user=user)
+    else:
+        snippets = Snippet.objects.all().order_by(colum)
+    if abc:
+        snippets = snippets.order_by(colum)
+    else:
+        snippets = snippets.order_by(f'-{colum}')
+    users = User.objects.all()
+    context = {'pagename': 'Мои сниппеты',
+               'snippets': snippets,
+               'user': user,
+               'users': users}
+    return render(request, 'pages/view_snippets.html', context)
+
+def listsortuser(request):
+    if request.method == 'POST':
+        sort_user = request.POST.get('sort_user')
+        snippets = Snippet.objects.filter(user__username=sort_user)
+        users = User.objects.all()
+        context = {'pagename': 'Мои сниппеты',
+                   'snippets': snippets,
+                   'users': users}
+        return render(request, 'pages/view_snippets.html', context)
+    else:
+        return Http404
